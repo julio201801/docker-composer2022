@@ -1,0 +1,82 @@
+#  version de configuraciones del docker compose 
+version: "3.9"  # optional since v1.27.0
+services:
+  mssql:
+    # image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlprueba
+    ports:
+      - 1433:1433
+    volumes:
+      # - /Users/cesargomezg./aplica/svelte/db/data:/var/lib/mssqlql/data
+      - ./data/mssql_data:/var/opt/mssql/data
+      - ./data/mssql_log:/var/opt/mssql/log
+      - ./data/mssql_backup:/var/opt/mssql/backup
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=ays123456
+      # - MSSQL_SA_PASSWORD=ays123456 .. asi es lo nuevo (probar depues)
+      - MSSQL_PID=Express
+       #  el mssql_pid para que funcione como sql express (inicialmente no tenia y trabajaba bien) 
+
+
+  postgres:
+    image: postgres:15.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - ./data/postgres:/var/lib/postgresql/data
+
+# volumes:
+#   postgres:
+#     driver: local
+
+# #-- image: ${DOCKER_REGISTRY}APInvoice.WebApi
+#   apis: 
+#     #-- image: APInvoice.WebApi
+#     container_name: apisnet
+#     ports:
+#       - 5000:80
+#     build:
+#       context: ../APInvoice/
+#       dockerfile: ../APInvoice/APInvoice.WebApi/Dockerfile 
+#     volumes:
+#       - ./api/appsettings.json:/app/appsettings.json
+    
+
+
+#   web: 
+#     build: .
+#     ports:
+#       - "8000:5000"
+#     volumes:
+#       - .:/code
+#       - logvolume01:/var/log
+#     depends_on:
+#       - redis
+#   redis:
+#     image: redis
+
+# volumes:
+#   logvolume01: {}
+
+
+# ------------------------------
+# 1. para crear docker compose (red de contenedores)
+# $ docker-compose up  -d
+# $ docker-compose up --build  -d        (para que reconstruya las imagenes)
+
+# NOTA: si da algun error volver a ejecutar
+
+# 2. a la carpeta ./data (la que se puso como volumen) hay que darle permiso de lectura y escritura
+
+# 3. ver los contenedore que se estan ejecutando
+# $ docker-compose ps
+
+# 4. Para iniciar sesión en el contenedor e iniciar sesión en mssql, use esto.
+# esto no sale
+# $ docker-compose exec sqlprueba /bin/bash
