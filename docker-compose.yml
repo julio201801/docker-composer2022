@@ -6,7 +6,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlprueba
     ports:
-      - 1433:1433
+      - 1533:1433
     volumes:
       # - /Users/cesargomezg./aplica/svelte/db/data:/var/lib/mssqlql/data
       - ./data/mssql_data:/var/opt/mssql/data
@@ -30,7 +30,27 @@ services:
       - '5432:5432'
     volumes: 
       - ./data/postgres:/var/lib/postgresql/data
+ 
+ #conexion de lista
 
+
+  mysql:
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    restart: always
+    container_name: mysql
+    environment:
+      - MYSQL_DATABASE=db_colas
+      - MYSQL_ROOT_PASSWORD=Demo2022$sale
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+      
+volumes:
+  db:
+    driver: local
 # volumes:
 #   postgres:
 #     driver: local
